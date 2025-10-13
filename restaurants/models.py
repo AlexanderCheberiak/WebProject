@@ -1,117 +1,67 @@
-from django.conf import settings
 from django.db import models
-from django.utils import timezone
+from django.contrib.auth.models import User
+
 
 class Restaurant(models.Model):
-    name = models.CharField(max_length=200)
-    address = models.TextField()
-    photo = models.ImageField(upload_to='restaurants/photos/', null=True, blank=True)
+    name = models.CharField(max_length=100)
+    address = models.CharField(max_length=200)
+    description = models.TextField(blank=True, null=True)
+    photo = models.ImageField(upload_to='restaurants/', blank=True, null=True)
+    latitude = models.FloatField(blank=True, null=True)
+    longitude = models.FloatField(blank=True, null=True)
 
     def __str__(self):
         return self.name
 
-    class Meta:
-        ordering = ['name']
 
 
 class Table(models.Model):
     restaurant = models.ForeignKey(Restaurant, on_delete=models.CASCADE, related_name='tables')
-    number = models.CharField(max_length=20) 
-    seats = models.PositiveSmallIntegerField()
-
-    class Meta:
-        unique_together = ('restaurant', 'number')
-        ordering = ['restaurant', 'number']
+    table_number = models.PositiveIntegerField()
+    capacity = models.PositiveIntegerField()
 
     def __str__(self):
-        return f'{self.restaurant.name} — Table {self.number} ({self.seats})'
-
-
-class Customer(models.Model):
-    """
-    Профіль клієнта. Може бути пов'язаний з user (auth.User) якщо є логін.
-    """
-    user = models.OneToOneField(
-        settings.AUTH_USER_MODEL,
-        null=True,
-        blank=True,
-        on_delete=models.SET_NULL,
-        related_name='customer_profile'
-    )
-    name = models.CharField(max_length=200)
-    phone = models.CharField(max_length=30)
-
-    def __str__(self):
-        return self.name
+        return f"Table {self.table_number} ({self.restaurant.name})"
 
 
 class MenuItem(models.Model):
     restaurant = models.ForeignKey(Restaurant, on_delete=models.CASCADE, related_name='menu_items')
-    name = models.CharField(max_length=200)
-    description = models.TextField(blank=True)
-    price = models.DecimalField(max_digits=8, decimal_places=2)
-    photo = models.ImageField(upload_to='menu/photos/', null=True, blank=True)
-    available = models.BooleanField(default=True)
+    name = models.CharField(max_length=100)
+    price = models.DecimalField(max_digits=7, decimal_places=2)
+    description = models.TextField(blank=True, null=True)
+    photo = models.ImageField(upload_to='menu_items/', blank=True, null=True)
 
     def __str__(self):
-        return f'{self.name} — {self.restaurant.name}'
+        return f"{self.name} - {self.price}₴"
 
 
 class Order(models.Model):
-    """
-    Замовлення користувача. Поле is_table_booking == True => бронювання столика,
-    інакше => замовлення на виніс.
-    """
-    STATUS_CHOICES = [
-        ('PENDING', 'Очікує'),
-        ('CONFIRMED', 'Підтверджено'),
-        ('PREPARING', 'Готується'),
-        ('READY', 'Готово'),
-        ('COMPLETED', 'Виконано'),
-        ('CANCELLED', 'Скасовано'),
+    ORDER_TYPE_CHOICES = [
+        (True, 'Dine-in (table reservation)'),
+        (False, 'Takeaway'),
     ]
 
-    customer = models.ForeignKey(Customer, on_delete=models.SET_NULL, null=True, blank=True, related_name='orders')
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='orders')
     restaurant = models.ForeignKey(Restaurant, on_delete=models.CASCADE, related_name='orders')
-    table = models.ForeignKey(Table, on_delete=models.SET_NULL, null=True, blank=True, related_name='orders')
-    created_at = models.DateTimeField(default=timezone.now)
-    scheduled_for = models.DateTimeField(null=True, blank=True)  # дата/час бронювання або очікування самовивозу
-    number_of_people = models.PositiveSmallIntegerField(null=True, blank=True)
-    is_table_booking = models.BooleanField(default=True)  # True => бронювання столика, False => виніс
-    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='PENDING')
-    notes = models.TextField(blank=True)
-    contact_phone = models.CharField(max_length=30, blank=True)  # якщо гість без аккаунту
-    delivery_address = models.TextField(blank=True)  # для доставки/виніс (опц.)
+    table = models.ForeignKey(Table, on_delete=models.SET_NULL, null=True, blank=True)
+    is_dine_in = models.BooleanField(choices=ORDER_TYPE_CHOICES, default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
 
-    # збережений підсумковий прайс (snapshot): заповнюється при підтвердженні
-    total_amount = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    # many-to-many до страв
+    menu_items = models.ManyToManyField(MenuItem, through='OrderItem')
 
     def __str__(self):
-        return f'Order #{self.id} — {self.restaurant.name} — {self.get_status_display()}'
+        return f"Order #{self.id} by {self.user.username}"
 
-    class Meta:
-        ordering = ['-created_at']
-
-    def calculate_total(self):
-        total = sum(item.line_total() for item in self.items.all())
-        self.total_amount = total
-        return total
 
 
 class OrderItem(models.Model):
-    """
-    Зв'язок замовлення і страв(лівих) — тут зберігаємо кількість та ціну на момент замовлення.
-    """
-    order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='items')
-    menu_item = models.ForeignKey(MenuItem, on_delete=models.PROTECT)
+    order = models.ForeignKey(Order, on_delete=models.CASCADE)
+    menu_item = models.ForeignKey(MenuItem, on_delete=models.CASCADE)
     quantity = models.PositiveIntegerField(default=1)
-    price_at_order = models.DecimalField(max_digits=8, decimal_places=2)
-
-    class Meta:
-        ordering = ['id']
 
     def __str__(self):
-        return f'{self.menu_item.name} x{self.quantity}'
+        return f"{self.menu_item.name} x {self.quantity}"
 
-    def line_total(self):
-        return self.price_at_order * self.quantity
+    def get_total_price(self):
+        return self.menu_item.price * self.quantity
