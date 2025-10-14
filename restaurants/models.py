@@ -6,13 +6,12 @@ class Restaurant(models.Model):
     name = models.CharField(max_length=100)
     address = models.CharField(max_length=200)
     description = models.TextField(blank=True, null=True)
-    photo = models.ImageField(upload_to='restaurants/', blank=True, null=True)
+    photo_url = models.URLField(blank=True, null=True)  # ✅ замість ImageField
     latitude = models.FloatField(blank=True, null=True)
     longitude = models.FloatField(blank=True, null=True)
 
     def __str__(self):
         return self.name
-
 
 
 class Table(models.Model):
@@ -29,7 +28,7 @@ class MenuItem(models.Model):
     name = models.CharField(max_length=100)
     price = models.DecimalField(max_digits=7, decimal_places=2)
     description = models.TextField(blank=True, null=True)
-    photo = models.ImageField(upload_to='menu_items/', blank=True, null=True)
+    photo_url = models.URLField(blank=True, null=True)  # ✅ замість ImageField
 
     def __str__(self):
         return f"{self.name} - {self.price}₴"
@@ -47,12 +46,10 @@ class Order(models.Model):
     is_dine_in = models.BooleanField(choices=ORDER_TYPE_CHOICES, default=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
-    # many-to-many до страв
-    menu_items = models.ManyToManyField(MenuItem, through='OrderItem')
+    menu_items = models.ManyToManyField('MenuItem', through='OrderItem')
 
     def __str__(self):
         return f"Order #{self.id} by {self.user.username}"
-
 
 
 class OrderItem(models.Model):
