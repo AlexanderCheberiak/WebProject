@@ -1,11 +1,19 @@
 is_global = true
 build_property.TargetFramework = net9.0
+build_property.TargetFramework = net9.0
+build_property.TargetPlatformMinVersion = 
 build_property.TargetPlatformMinVersion = 
 build_property.UsingMicrosoftNETSdkWeb = true
+build_property.UsingMicrosoftNETSdkWeb = true
+build_property.ProjectTypeGuids = 
 build_property.ProjectTypeGuids = 
 build_property.InvariantGlobalization = 
+build_property.InvariantGlobalization = 
+build_property.PlatformNeutralAssembly = 
 build_property.PlatformNeutralAssembly = 
 build_property.EnforceExtendedAnalyzerRules = 
+build_property.EnforceExtendedAnalyzerRules = 
+build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property.RootNamespace = WebProject
 build_property.RootNamespace = WebProject
@@ -28,12 +36,112 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3MvSG9tZS9Qcml2YWN5LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
+[/home/alexander/Documents/WebProject/WebProject/Views/MenuItems/Create.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvTWVudUl0ZW1zL0NyZWF0ZS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[/home/alexander/Documents/WebProject/WebProject/Views/MenuItems/Delete.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvTWVudUl0ZW1zL0RlbGV0ZS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[/home/alexander/Documents/WebProject/WebProject/Views/MenuItems/Details.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvTWVudUl0ZW1zL0RldGFpbHMuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[/home/alexander/Documents/WebProject/WebProject/Views/MenuItems/Edit.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvTWVudUl0ZW1zL0VkaXQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[/home/alexander/Documents/WebProject/WebProject/Views/MenuItems/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvTWVudUl0ZW1zL0luZGV4LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[/home/alexander/Documents/WebProject/WebProject/Views/OrderItems/Create.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvT3JkZXJJdGVtcy9DcmVhdGUuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[/home/alexander/Documents/WebProject/WebProject/Views/OrderItems/Delete.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvT3JkZXJJdGVtcy9EZWxldGUuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[/home/alexander/Documents/WebProject/WebProject/Views/OrderItems/Details.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvT3JkZXJJdGVtcy9EZXRhaWxzLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[/home/alexander/Documents/WebProject/WebProject/Views/OrderItems/Edit.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvT3JkZXJJdGVtcy9FZGl0LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[/home/alexander/Documents/WebProject/WebProject/Views/OrderItems/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvT3JkZXJJdGVtcy9JbmRleC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[/home/alexander/Documents/WebProject/WebProject/Views/Orders/Create.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvT3JkZXJzL0NyZWF0ZS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[/home/alexander/Documents/WebProject/WebProject/Views/Orders/Delete.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvT3JkZXJzL0RlbGV0ZS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[/home/alexander/Documents/WebProject/WebProject/Views/Orders/Details.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvT3JkZXJzL0RldGFpbHMuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[/home/alexander/Documents/WebProject/WebProject/Views/Orders/Edit.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvT3JkZXJzL0VkaXQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[/home/alexander/Documents/WebProject/WebProject/Views/Orders/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvT3JkZXJzL0luZGV4LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[/home/alexander/Documents/WebProject/WebProject/Views/Restaurants/Create.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvUmVzdGF1cmFudHMvQ3JlYXRlLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[/home/alexander/Documents/WebProject/WebProject/Views/Restaurants/Delete.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvUmVzdGF1cmFudHMvRGVsZXRlLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[/home/alexander/Documents/WebProject/WebProject/Views/Restaurants/Details.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvUmVzdGF1cmFudHMvRGV0YWlscy5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[/home/alexander/Documents/WebProject/WebProject/Views/Restaurants/Edit.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvUmVzdGF1cmFudHMvRWRpdC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[/home/alexander/Documents/WebProject/WebProject/Views/Restaurants/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvUmVzdGF1cmFudHMvSW5kZXguY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
 [/home/alexander/Documents/WebProject/WebProject/Views/Shared/Error.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3MvU2hhcmVkL0Vycm9yLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
 [/home/alexander/Documents/WebProject/WebProject/Views/Shared/_ValidationScriptsPartial.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3MvU2hhcmVkL19WYWxpZGF0aW9uU2NyaXB0c1BhcnRpYWwuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[/home/alexander/Documents/WebProject/WebProject/Views/Tables/Create.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvVGFibGVzL0NyZWF0ZS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[/home/alexander/Documents/WebProject/WebProject/Views/Tables/Delete.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvVGFibGVzL0RlbGV0ZS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[/home/alexander/Documents/WebProject/WebProject/Views/Tables/Details.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvVGFibGVzL0RldGFpbHMuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[/home/alexander/Documents/WebProject/WebProject/Views/Tables/Edit.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvVGFibGVzL0VkaXQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[/home/alexander/Documents/WebProject/WebProject/Views/Tables/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvVGFibGVzL0luZGV4LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
 [/home/alexander/Documents/WebProject/WebProject/Views/_ViewImports.cshtml]
