@@ -2,7 +2,41 @@
     ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="/">Restaurant</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item">
+                    <a class="nav-link" asp-controller="Home" asp-action="Index">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" asp-controller="Restaurants" asp-action="Index">Restaurants</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" asp-controller="MenuItems" asp-action="Index">Menu</a>
+                </li>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div class="text-center mt-5">
+    <h1 class="display-4">Welcome to our Restaurant Website!</h1>
+    <p class="lead">Explore our restaurants and menu items below</p>
+</div>
+
+<div class="container mt-5">
+    <section id="restaurants">
+        <a class="btn btn-primary" asp-controller="Restaurants" asp-action="Index">View Restaurants</a>
+    </section>
+
+    <section id="menu-items" class="mt-5">
+        <a class="btn btn-primary" asp-controller="MenuItems" asp-action="Index">View Menu Items</a>
+    </section>
 </div>
