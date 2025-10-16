@@ -1,0 +1,7 @@
+﻿services:
+  webproject:
+    image: webproject
+    build:
+      context: .
+      dockerfile: Dockerfile
+
