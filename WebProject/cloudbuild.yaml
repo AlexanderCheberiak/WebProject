@@ -1,0 +1,24 @@
+steps:
+  # 1. Збірка Docker образу
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['build', '-t', 'gcr.io/$PROJECT_ID/restaurant-web', '.']
+
+  # 2. Пуш образу в Google Artifact Registry
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', 'gcr.io/$PROJECT_ID/restaurant-web']
+
+  # 3. Деплой у Cloud Run
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: gcloud
+    args:
+      - 'run'
+      - 'deploy'
+      - 'restaurant-web'
+      - '--image=gcr.io/$PROJECT_ID/restaurant-web'
+      - '--platform=managed'
+      - '--region=europe-central2'
+      - '--allow-unauthenticated'
+      - '--port=8080'
+
+images:
+  - 'gcr.io/$PROJECT_ID/restaurant-web'
