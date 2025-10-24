@@ -1,0 +1,11 @@
+version: "3.9"
+services:
+  web:
+    build: .
+    container_name: restaurant_web
+    ports:
+      - "8080:8080"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ConnectionStrings__DefaultConnection=Server=136.114.170.245;Port=3306;Database=restaurant_db;Uid=root;Pwd=MySecret123;TreatTinyAsBoolean=false;
+    restart: always

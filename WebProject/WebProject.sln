@@ -4,7 +4,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebProject", "WebProject.cs
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{1F2883BF-C3D7-44F5-B157-CFCC94CDFB48}"
 	ProjectSection(SolutionItems) = preProject
-		compose.yaml = compose.yaml
+		compose-local.yaml = compose-local.yaml
 	EndProjectSection
 EndProject
 Global

@@ -1,0 +1,28 @@
+﻿version: "3.9"
+services:
+  web:
+    build: .
+    container_name: restaurant_web
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__DefaultConnection=Server=db;Database=restaurant_db;User=root;Password=MySecret123;TreatTinyAsBoolean=false;
+    restart: always
+
+  db:
+    image: mysql:8.3
+    container_name: restaurant_db
+    restart: always
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: MySecret123
+      MYSQL_DATABASE: restaurant_db
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+volumes:
+  mysql_data:

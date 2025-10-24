@@ -1,24 +1,22 @@
 steps:
-  # 1. Збірка Docker образу
+  # 1️⃣ Build Docker image
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['build', '-t', 'gcr.io/$PROJECT_ID/restaurant-web', '.']
-
-  # 2. Пуш образу в Google Artifact Registry
+    args: ['build', '-t', 'gcr.io/$PROJECT_ID/restaurant_web', '.']
+  
+  # 2️⃣ Push image
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['push', 'gcr.io/$PROJECT_ID/restaurant-web']
-
-  # 3. Деплой у Cloud Run
-  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
-    entrypoint: gcloud
+    args: ['push', 'gcr.io/$PROJECT_ID/restaurant_web']
+  
+  # 3️⃣ Deploy to Cloud Run
+  - name: 'gcr.io/cloud-builders/gcloud'
     args:
-      - 'run'
-      - 'deploy'
-      - 'restaurant-web'
-      - '--image=gcr.io/$PROJECT_ID/restaurant-web'
-      - '--platform=managed'
-      - '--region=europe-central2'
-      - '--allow-unauthenticated'
-      - '--port=8080'
-
-images:
-  - 'gcr.io/$PROJECT_ID/restaurant-web'
+      [
+        'run', 'deploy', 'restaurant-web',
+        '--image', 'gcr.io/$PROJECT_ID/restaurant_web',
+        '--region', 'europe-central2',
+        '--allow-unauthenticated',
+        '--port', '8080',
+        '--set-env-vars',
+        'ConnectionStrings__DefaultConnection=Server=136.114.170.245;Port=3306;Database=restaurant_db;Uid=root;Pwd=MySecret123;TreatTinyAsBoolean=false;',
+        '--set-env-vars', 'ASPNETCORE_ENVIRONMENT=Production'
+      ]
