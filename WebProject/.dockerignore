@@ -21,5 +21,9 @@
 **/obj
 **/secrets.dev.yaml
 **/values.dev.yaml
+
+!wwwroot/
+!Views/
+
 LICENSE
 README.md

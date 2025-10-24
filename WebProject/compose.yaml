@@ -7,8 +7,8 @@
     depends_on:
       - db
     environment:
-      - ASPNETCORE_ENVIRONMENT=Production
-      - ConnectionStrings__DefaultConnection=server=db;database=restaurantdb;user=root;password=1234;TreatTinyAsBoolean=false;
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__DefaultConnection=server=db;database=restaurant_db;user=root;password=MySecret123;TreatTinyAsBoolean=false;
     restart: always
 
   db:

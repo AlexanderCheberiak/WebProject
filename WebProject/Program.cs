@@ -22,12 +22,14 @@ if (!app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.UseStaticFiles();
 app.UseRouting();
 
 app.UseAuthorization();
 
 app.MapStaticAssets();
-
+app.MapControllers();
+app.MapDefaultControllerRoute();
 app.MapControllerRoute(
         name: "default",
         pattern: "{controller=Home}/{action=Index}/{id?}")
