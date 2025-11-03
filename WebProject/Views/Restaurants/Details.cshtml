@@ -2,7 +2,9 @@
 
 @{
     ViewData["Title"] = Model?.Name ?? "Restaurant Details";
+    ViewData["Description"] = Model?.Description ?? (Model != null ? $"{Model.Name} — {Model.Address}" : "Restaurant details");
 }
+
 
 <div class="container my-5">
     <div class="text-center mb-5">
