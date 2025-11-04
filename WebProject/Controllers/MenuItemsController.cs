@@ -5,17 +5,27 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
 using WebProject.Data;
 using WebProject.Models;
+using Google.Cloud.Storage.V1;
+using System.Net.Http; 
+using System.IO; 
 
 namespace WebProject.Controllers
 {
     public class MenuItemsController : Controller
     {
+        private const string _bucketName = "restaurant-web-static-files";
+        private readonly StorageClient _storageClient;
+        private readonly IHttpClientFactory _httpClientFactory;
         private readonly ApplicationDbContext _context;
 
-        public MenuItemsController(ApplicationDbContext context)
+        public MenuItemsController(StorageClient storageClient, 
+            IHttpClientFactory httpClientFactory, ApplicationDbContext context)
         {
+            _storageClient = storageClient;
+            _httpClientFactory = httpClientFactory;
             _context = context;
         }
 
@@ -46,6 +56,7 @@ namespace WebProject.Controllers
         }
 
         // GET: MenuItems/Create
+        [Authorize(Roles = "Admin")]
         public IActionResult Create()
         {
             ViewData["RestaurantId"] = new SelectList(_context.Restaurants, "Id", "Name");
@@ -53,9 +64,9 @@ namespace WebProject.Controllers
         }
 
         // POST: MenuItems/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        // ...
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,RestaurantId,Name,Price,Description,PhotoUrl")] MenuItem menuItem)
         {
@@ -63,8 +74,22 @@ namespace WebProject.Controllers
             {
                 ModelState.AddModelError("Price", "Price must be greater than zero");
             }
+            
             if (ModelState.IsValid)
             {
+                try
+                {
+                    string newPhotoUrl = await IngestExternalPhotoAsync(menuItem.PhotoUrl);
+                    
+                    menuItem.PhotoUrl = newPhotoUrl;
+                }
+                catch (Exception ex)
+                {
+                    ModelState.AddModelError("PhotoUrl", $"Не вдалося обробити URL зображення: {ex.Message}");
+                    ViewData["RestaurantId"] = new SelectList(_context.Restaurants, "Id", "Name", menuItem.RestaurantId);
+                    return View(menuItem);
+                }
+                
                 _context.Add(menuItem);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -74,6 +99,7 @@ namespace WebProject.Controllers
         }
 
         // GET: MenuItems/Edit/5
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -91,9 +117,9 @@ namespace WebProject.Controllers
         }
 
         // POST: MenuItems/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        // ...
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,RestaurantId,Name,Price,Description,PhotoUrl")] MenuItem menuItem)
         {
@@ -106,6 +132,10 @@ namespace WebProject.Controllers
             {
                 try
                 {
+                    string newPhotoUrl = await IngestExternalPhotoAsync(menuItem.PhotoUrl);
+                    
+                    menuItem.PhotoUrl = newPhotoUrl;
+                    
                     _context.Update(menuItem);
                     await _context.SaveChangesAsync();
                 }
@@ -120,6 +150,12 @@ namespace WebProject.Controllers
                         throw;
                     }
                 }
+                catch (Exception ex) 
+                {
+                    ModelState.AddModelError("PhotoUrl", $"Не вдалося обробити URL зображення: {ex.Message}");
+                    ViewData["RestaurantId"] = new SelectList(_context.Restaurants, "Id", "Name", menuItem.RestaurantId);
+                    return View(menuItem);
+                }
                 return RedirectToAction(nameof(Index));
             }
             ViewData["RestaurantId"] = new SelectList(_context.Restaurants, "Id", "Name", menuItem.RestaurantId);
@@ -127,6 +163,7 @@ namespace WebProject.Controllers
         }
 
         // GET: MenuItems/Delete/5
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -147,6 +184,7 @@ namespace WebProject.Controllers
 
         // POST: MenuItems/Delete/5
         [HttpPost, ActionName("Delete")]
+        [Authorize(Roles = "Admin")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
@@ -163,6 +201,39 @@ namespace WebProject.Controllers
         private bool MenuItemExists(int id)
         {
             return _context.MenuItems.Any(e => e.Id == id);
+        }
+        
+        private async Task<string> IngestExternalPhotoAsync(string externalUrl)
+        {
+            if (string.IsNullOrEmpty(externalUrl) || 
+                !Uri.IsWellFormedUriString(externalUrl, UriKind.Absolute) ||
+                externalUrl.Contains("storage.googleapis.com"))
+            {
+                return externalUrl;
+            }
+
+            var httpClient = _httpClientFactory.CreateClient();
+            
+            using var response = await httpClient.GetAsync(externalUrl);
+            response.EnsureSuccessStatusCode(); 
+            
+            using var imageStream = await response.Content.ReadAsStreamAsync();
+            var contentType = response.Content.Headers.ContentType?.ToString() ?? "application/octet-stream";
+
+            var extension = Path.GetExtension(new Uri(externalUrl).AbsolutePath);
+            if (string.IsNullOrEmpty(extension)) extension = ".jpg"; 
+            var fileName = $"{Guid.NewGuid()}{extension}";
+
+            await _storageClient.UploadObjectAsync(
+                _bucketName,
+                fileName,
+                contentType,
+                imageStream
+            );
+
+            var publicUrl = $"https://storage.googleapis.com/{_bucketName}/{fileName}";
+            
+            return publicUrl;
         }
     }
 }

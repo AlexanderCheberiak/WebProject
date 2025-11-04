@@ -3,21 +3,20 @@
 <head>
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-Y7QMMBPLM5"></script>
     <script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-Y7QMMBPLM5');
-</script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-Y7QMMBPLM5');
+    </script>
     <title>@ViewData["Title"] - WebProject</title>
     @if (!string.IsNullOrEmpty((string)ViewData["Description"]))
     {
         <meta name="description" content="@ViewData["Description"]" />
     }
     <script type="importmap"></script>
+    <link rel="icon" type="image/x-icon" href="~/favicon.ico"/>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css"/>
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true"/>
     <link rel="stylesheet" href="~/WebProject.styles.css" asp-append-version="true"/>
@@ -37,8 +36,21 @@
                         <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                     </li>
                     <li class="nav-item">
+                        <a class="nav-link text-dark" asp-area="" asp-controller="MenuItems" asp-action="Index">Menu</a>
+                    </li>
+                    @if (User.IsInRole("Admin"))
+                    {<li class="nav-item">
+                        <a class="nav-link text-dark" asp-area="" asp-controller="Orders" asp-action="Index">Orders</a>
+                    </li>}
+                    <li class="nav-item">
+                        <a class="nav-link text-dark" asp-area="" asp-controller="Restaurants" asp-action="Index">Restaurants</a>
+                    </li>
+                    <li class="nav-item">
                         <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                     </li>
+                </ul>
+                <ul class="navbar-nav">
+                    <partial name="_LoginPartial" />
                 </ul>
             </div>
         </div>
@@ -58,6 +70,64 @@
 <script src="~/lib/jquery/dist/jquery.min.js"></script>
 <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 <script src="~/js/site.js" asp-append-version="true"></script>
+
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-app.js";
+    import { 
+        getAuth, 
+        OAuthProvider, 
+        signInWithPopup, 
+        getIdToken 
+    } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-auth.js";
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyBjwD0jKdozB1QjoWCuW9SlSZfUB6A366Q",
+        authDomain: "restaurant-cloud-476111.firebaseapp.com",
+        projectId: "restaurant-cloud-476111",
+        storageBucket: "restaurant-cloud-476111.firebasestorage.app",
+        messagingSenderId: "392293969193",
+        appId: "1:392293969193:web:22790e563af0ba183c1b38",
+        measurementId: "G-GJ21EC5B7P"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    const msLoginBtn = document.getElementById("microsoftLoginButton");
+    
+    if (msLoginBtn) {
+        msLoginBtn.addEventListener("click", () => {
+            const provider = new OAuthProvider('microsoft.com');
+
+            signInWithPopup(auth, provider)
+                .then((result) => {
+                    return getIdToken(result.user);
+                })
+                .then((idToken) => {
+                    return fetch('/api/auth/signin-microsoft', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ token: idToken })
+                    });
+                })
+                .then((response) => {
+                    if (response.ok) {
+                        window.location.reload();
+                    } else {
+                        return response.json().then(err => Promise.reject(err));
+                    }
+                })
+                .catch((error) => {
+                    console.error("Помилка входу:", error);
+                    const errorMessage = error.error || error.message || 'Щось пішло не так.';
+                    alert(errorMessage);
+                });
+        });
+    }
+</script>
+
 @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

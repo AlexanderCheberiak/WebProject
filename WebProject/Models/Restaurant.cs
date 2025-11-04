@@ -17,10 +17,6 @@ using System.ComponentModel.DataAnnotations;
 
         public string? PhotoUrl { get; set; }
 
-        public double? Latitude { get; set; }
-        public double? Longitude { get; set; }
-
-        public ICollection<Table>? Tables { get; set; }
         public ICollection<MenuItem>? MenuItems { get; set; }
         public ICollection<Order>? Orders { get; set; }
     }

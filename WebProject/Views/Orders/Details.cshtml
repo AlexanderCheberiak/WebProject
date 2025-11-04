@@ -1,4 +1,5 @@
 @model WebProject.Models.Order
+@using Microsoft.AspNetCore.Identity
 
 @{
     ViewData["Title"] = "Details";
@@ -31,6 +32,10 @@
     </dl>
 </div>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
+    @if (User.IsInRole("Admin"))
+    {
+        <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a>
+        <span>|</span>
+    }
     <a asp-action="Index">Back to List</a>
 </div>
